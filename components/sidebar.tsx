@@ -9,14 +9,14 @@ const Sidebar = () => {
   return (
     <div className="basis-[200px] grow shrink-0 w-full h-full flex flex-col">
       <div className="flex flex-row">
-        <div>
+        <div className="flex h-[27px] justify-between">
           {theme === "dark" ? (
-            <LightIcon className="w-8 h-8" />
+            <DarkIcon fill="black" className="w-8 h-8" />
           ) : (
-            <DarkIcon className="w-8 h-8" />
+            <LightIcon fill="black" className="w-8 h-8" />
           )}
         </div>
-        <Logo />
+        <Logo fill="black" />
       </div>
     </div>
   );

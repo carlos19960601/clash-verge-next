@@ -1,9 +1,9 @@
 
 // nextjs 导入svg图片作为组件需要 @svgr/webpack
 // svgs
-export { default as DarkIcon } from './svgs/icon_dark.svg';
-export { default as LightIcon } from './svgs/icon_light.svg';
-export { default as Logo } from './svgs/logo.svg';
+export { default as DarkIcon } from './svgs/dark_icon';
+export { default as LightIcon } from './svgs/light_icon';
+export { default as Logo } from './svgs/logo';
 
 
 // layout
