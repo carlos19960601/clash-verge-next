@@ -5,6 +5,19 @@ const nextConfig = {
         config.module.rules.push({
             test: /\.svg$/,
             use: '@svgr/webpack',
+            options: {
+                svgo: true,
+                svgoConfig: {
+                  plugins: [
+                    {
+                      name: 'preset-default',
+                      params: {
+                        overrides: { removeViewBox: false },
+                      },
+                    },
+                  ],
+                },
+            }
         })
 
         return config
