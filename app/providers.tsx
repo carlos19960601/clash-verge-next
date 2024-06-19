@@ -9,7 +9,7 @@ import { SWRConfig } from "swr";
 const Providers = ({ children }: PropsWithChildren) => {
   return (
     <NextUIProvider>
-      <ThemeProvider attribute="class" defaultTheme="light">
+      <ThemeProvider attribute="class" defaultTheme="dark">
         <SWRConfig value={{ errorRetryCount: 3 }}>
           <ClashLayout>{children}</ClashLayout>
         </SWRConfig>
