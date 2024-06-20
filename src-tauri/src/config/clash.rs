@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_yaml::{Mapping, Value};
 
+#[derive(Debug, Clone)]
 pub struct IClashTemp(pub Mapping);
 
 #[derive(Deserialize, Serialize)]

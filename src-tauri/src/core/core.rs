@@ -1,3 +1,4 @@
-pub struct CoreManager {
-    
-}
+#[derive(Debug)]
+pub struct CoreManager {}
+
+impl CoreManager {}

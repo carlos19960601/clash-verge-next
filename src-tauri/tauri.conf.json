@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
-    "beforeBuildCommand": "pnpm run build",
-    "beforeDevCommand": "pnpm run dev",
+    "beforeBuildCommand": "pnpm run web:build",
+    "beforeDevCommand": "pnpm run web:dev",
     "devPath": "http://localhost:3000",
     "distDir": "../out"
   },
@@ -21,7 +21,7 @@
       "deb": {
         "depends": []
       },
-      "externalBin": [],
+      "externalBin": ["sidecar/verge-mihomo", "sidecar/verge-mihomo-alpha"],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -30,7 +30,6 @@
         "icons/icon.ico"
       ],
       "identifier": "io.github.clash-verge-next.clash-verge-next",
-      "longDescription": "",
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
