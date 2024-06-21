@@ -12,7 +12,9 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "process": {
+        "all": true
+      }
     },
     "bundle": {
       "active": true,
