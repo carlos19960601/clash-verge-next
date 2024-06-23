@@ -1,10 +1,27 @@
+"use client";
+
 import BasePage from "@/components/layout/base/base-page";
+import ProxyGroups from "@/components/proxy/proxy-groups";
+import { getClashConfig, updateConfigs } from "@/services/api";
 import { Button, ButtonGroup } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
+import useSWR from "swr";
 
 export default function Home() {
   const modeList = ["rule", "global", "direct"];
   const t = useTranslations();
+
+  const { data: clashConfig, mutate: mutateClash } = useSWR(
+    "getClashConfig",
+    getClashConfig
+  );
+
+  const curMode = clashConfig?.mode?.toLowerCase();
+
+  const onChangeMode = async (mode: string) => {
+    await updateConfigs({ mode });
+    mutateClash();
+  };
 
   return (
     <BasePage
@@ -16,6 +33,8 @@ export default function Home() {
               <Button
                 key={mode}
                 variant={mode === "rule" ? "solid" : "bordered"}
+                onClick={() => onChangeMode(mode)}
+                className="capitalize"
               >
                 {t(mode)}
               </Button>
@@ -23,6 +42,8 @@ export default function Home() {
           </ButtonGroup>
         </div>
       }
-    ></BasePage>
+    >
+      <ProxyGroups mode={curMode!} />
+    </BasePage>
   );
 }

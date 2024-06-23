@@ -13,13 +13,10 @@ const FORCE = process.argv.includes("--force")
 
 console.log(process.argv)
 
-
-
 const arg1 = process.argv.slice(2)[0];
 const arg2 = process.argv.slice(2)[1];
 
 const target = arg1 === "--force" ? arg2 : arg1;
-
 
 const PLATFORM_MAP = {
 
@@ -49,8 +46,6 @@ if (!META_ALPHA_MAP[`${platform}-${arch}`]) {
 }
 
 
-
-
 let META_ALPHA_VERSION;
 const META_ALPHA_VERSION_URL = "https://github.com/MetaCubeX/mihomo/releases/download/Prerelease-Alpha/version.txt";
 
@@ -60,7 +55,7 @@ async function downloadFile(url, path) {
 
     const httpProxy = process.env.http_proxy || process.env.HTTP_PROXY || process.env.https_proxy || process.env.HTTPS_PROXY
     if (httpProxy) {
-        options.agent = HttpsProxyAgent(httpProxy)
+        options.agent = new HttpsProxyAgent(httpProxy)
     }
 
     const response = await fetch(url, {...options, method: "GET", headers: {"Content-Type": "application/octet-stream"}})
@@ -76,7 +71,7 @@ async function getLatestAlphaVersion() {
 
     const httpProxy = process.env.http_proxy || process.env.HTTP_PROXY || process.env.https_proxy || process.env.HTTPS_PROXY
     if (httpProxy) {
-        options.agent = HttpsProxyAgent(httpProxy)
+        options.agent = new HttpsProxyAgent(httpProxy)
     }
 
     try {
@@ -102,7 +97,7 @@ async function getLatestReleaseVersion() {
 
     const httpProxy = process.env.http_proxy || process.env.HTTP_PROXY || process.env.https_proxy || process.env.HTTPS_PROXY
     if (httpProxy) {
-        options.agent = HttpsProxyAgent(httpProxy)
+        options.agent = new HttpsProxyAgent(httpProxy)
     }
 
     try {
@@ -155,8 +150,6 @@ function clashMeta() {
       downloadURL,
     };
 }
-
-
 
 async function resolveSidecar(binInfo) {
     const { name, targetFile, zipFile, exeFile, downloadURL } = binInfo;
@@ -212,6 +205,49 @@ async function resolveSidecar(binInfo) {
     }
 }
 
+async function resolveResource(binInfo) {
+    const {file, downloadURL} = binInfo;
+
+    const resDir = path.join(cwd, "src-tauri/resources");
+    const targetPath = path.join(resDir, file)
+
+
+    if (!FORCE && (await fs.pathExists(targetPath))) return;
+
+    await fs.mkdirp(resDir)
+    await downloadFile(downloadURL, targetPath)
+
+    console.log(`[INFO]: ${file} finished`);
+}
+
+const SERVICE_URL = `https://github.com/clash-verge-rev/clash-verge-service/releases/download/${SIDECAR_HOST}`;
+
+const resolveService = () => { 
+    let ext = platform === "win32" ? ".exe" : "";
+    resolveResource({
+        file: "clash-verge-service" + ext,
+        downloadURL: `${SERVICE_URL}/clash-verge-service${ext}`
+    })
+}
+
+const resolveMmdb = () => 
+    resolveResource({
+        file: "Country.mmdb",
+        downloadURL: `https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb`
+    })
+
+const resolveGeosite = ()=> 
+    resolveResource({
+        file: "geisite.dat",
+        downloadURL: `https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat`,
+    })
+
+const resolveGeoIP = () =>
+    resolveResource({
+      file: "geoip.dat",
+      downloadURL: `https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat`,
+    });
+
 const tasks = [
     {
         name: "verge-mihomo-alpha",
@@ -221,6 +257,26 @@ const tasks = [
     {
         name: "verge-mihomo",
         func: ()=>getLatestReleaseVersion().then(()=>resolveSidecar(clashMeta())),
+        retry: 5
+    },
+    {
+        name: "service",
+        func: resolveService,
+        retry: 5
+    },
+    {
+        name: "mmdb",
+        func: resolveMmdb,
+        retry: 5
+    },
+    {
+        name:"geosite",
+        func: resolveGeosite,
+        retry: 5
+    },
+    {
+        name: "geoip",
+        func: resolveGeoIP,
         retry: 5
     }
 ]

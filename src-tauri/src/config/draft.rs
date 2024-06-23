@@ -1,4 +1,4 @@
-use super::IClashTemp;
+use super::{IClashTemp, IRuntime, IVerge};
 use parking_lot::{MappedMutexGuard, Mutex, MutexGuard};
 use std::sync::Arc;
 
@@ -11,7 +11,23 @@ macro_rules! draft_define {
     ($id: ident) => {
         impl Draft<$id> {
             pub fn latest(&self) -> MappedMutexGuard<$id> {
-                MutexGuard::map(self.inner.lock(), |guard| &mut guard.0)
+                MutexGuard::map(self.inner.lock(), |inner| {
+                    if inner.1.is_none() {
+                        &mut inner.0
+                    } else {
+                        inner.1.as_mut().unwrap()
+                    }
+                })
+            }
+
+            pub fn draft(&self) -> MappedMutexGuard<$id> {
+                MutexGuard::map(self.inner.lock(), |inner| {
+                    if inner.1.is_none() {
+                        inner.1 = Some(inner.0.clone());
+                    }
+
+                    inner.1.as_mut().unwrap()
+                })
             }
         }
 
@@ -26,3 +42,5 @@ macro_rules! draft_define {
 }
 
 draft_define!(IClashTemp);
+draft_define!(IRuntime);
+draft_define!(IVerge);
