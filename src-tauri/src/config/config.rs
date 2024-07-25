@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use anyhow::{Ok, Result};
 use once_cell::sync::OnceCell;
 
@@ -39,23 +37,23 @@ impl Config {
         Self::global().runtime_config.clone()
     }
 
-    // pub fn init_config() -> Result<()> {
-    //     crate::log_err!(Self::generate());
+    pub fn init_config() -> Result<()> {
+        // crate::log_err!(Self::generate());
 
-    //     if let Err(err) = Self::generate_file(ConfigType::Run) {
-    //         log::error!(target: "app", "{err}");
-    //         let runtime_path = dirs::app_home_dir()?.join(RUNTIME_CONFIG);
-    //         if !runtime_path.exists() {
-    //             help::save_yaml(
-    //                 &runtime_path,
-    //                 &Config::clash().latest().0,
-    //                 Some("# Clash Verge Runtime"),
-    //             )?;
-    //         }
-    //     }
+        //     if let Err(err) = Self::generate_file(ConfigType::Run) {
+        //         log::error!(target: "app", "{err}");
+        //         let runtime_path = dirs::app_home_dir()?.join(RUNTIME_CONFIG);
+        //         if !runtime_path.exists() {
+        //             help::save_yaml(
+        //                 &runtime_path,
+        //                 &Config::clash().latest().0,
+        //                 Some("# Clash Verge Runtime"),
+        //             )?;
+        //         }
+        //     }
 
-    //     Ok(())
-    // }
+        Ok(())
+    }
 
     // 将订阅丢到对应的文件中
     // pub fn generate_file(typ: ConfigType) -> Result<PathBuf> {

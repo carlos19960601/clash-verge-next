@@ -4,7 +4,14 @@ use anyhow::Result;
 
 use crate::config::Config;
 
-use super::dirs;
+use crate::utils::dirs;
+
+pub fn init_config() -> Result<()> {
+    let a= dirs::app_home_dir().or(None);
+    println!("app_home_dir: {}", app_home_dir);
+
+    Ok(())
+}
 
 pub fn init_resources() -> Result<()> {
     // "/Users/carlos/Library/Application Support/io.github.clash-verge-next.clash-verge-next"
@@ -59,9 +66,11 @@ pub fn init_resources() -> Result<()> {
 }
 
 pub fn startup_script() -> Result<()> {
-    let path = {
+    let path: Option<String> = {
         let verge = Config::verge();
         let verge = verge.latest();
         verge.startup_script.clone()
-    }
+    };
+
+    Ok(())
 }

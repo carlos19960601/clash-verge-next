@@ -1,7 +1,7 @@
 "use client";
 
 import useIsDark from "@/hooks/useIsDark";
-import { cn } from "@nextui-org/react";
+import { cn } from "@/lib/utils";
 import { PropsWithChildren, ReactNode } from "react";
 import { BaseErrorBoundary } from "./base-error-boundary";
 

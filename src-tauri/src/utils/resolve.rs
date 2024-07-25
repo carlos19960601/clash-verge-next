@@ -7,8 +7,11 @@ use crate::log_err;
 pub static VERSION: OnceCell<String> = OnceCell::new();
 
 pub fn resolve_setup(app: &mut App) {
-    // log_err!(Config::init_config());
-    let version = app.package_info().version.to_string();
+    crate::log_err!(init::init_config());
+
+    // 启动核心
+    log_err!(Config::init_config());
+    let version: String = app.package_info().version.to_string();
     handle::Handle::global().init(app.app_handle());
     VERSION.get_or_init(|| version.clone());
 

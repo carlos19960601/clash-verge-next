@@ -3,9 +3,9 @@ import Sidebar from "./sidebar";
 
 const ClashLayout = ({ children }: PropsWithChildren) => {
   return (
-    <div className="h-screen w-full flex overflow-hidden">
+    <div className="h-screen flex">
       <Sidebar />
-      <div className="grow shrink basis-full">{children}</div>
+      <div className="grow">{children}</div>
     </div>
   );
 };

@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
 import { getLocale, getMessages } from "next-intl/server";
-import { Inter } from "next/font/google";
+import { Roboto_Mono as FontSans } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 
+import { cn } from "@/lib/utils";
 import { NextIntlClientProvider } from "next-intl";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Clash Verge Next",
   description: "Clash GUI",
 };
+
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export default async function RootLayout({
   children,
@@ -25,8 +29,13 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
-      <body className={inter.className}>
+    <html lang={locale} suppressHydrationWarning>
+      <body
+        className={cn(
+          "min-h-screen bg-background text-foreground font-sans antialiased",
+          fontSans.className
+        )}
+      >
         <NextIntlClientProvider messages={messages}>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>

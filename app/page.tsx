@@ -2,8 +2,9 @@
 
 import BasePage from "@/components/layout/base/base-page";
 import ProxyGroups from "@/components/proxy/proxy-groups";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { getClashConfig, updateConfigs } from "@/services/api";
-import { Button, ButtonGroup } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
 import useSWR from "swr";
 
@@ -28,18 +29,21 @@ export default function Home() {
       title={t("Proxy Groups")}
       header={
         <div className="flex">
-          <ButtonGroup color="primary" size="sm" variant="bordered">
+          <div className="flex -space-x-px">
             {modeList.map((mode) => (
               <Button
                 key={mode}
-                variant={mode === "rule" ? "solid" : "bordered"}
                 onClick={() => onChangeMode(mode)}
-                className="capitalize"
+                variant="outline"
+                className={cn(
+                  "first:rounded-l-md last:rounded-r-md rounded-none",
+                  curMode === mode && "bg-blue-500"
+                )}
               >
                 {t(mode)}
               </Button>
             ))}
-          </ButtonGroup>
+          </div>
         </div>
       }
     >

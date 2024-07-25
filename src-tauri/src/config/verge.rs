@@ -30,6 +30,7 @@ impl IVerge {
             language: Some("zh".into()),
             theme_mode: Some("system".into()),
             traffic_graph: Some(true),
+            startup_script: None,
         }
     }
 }

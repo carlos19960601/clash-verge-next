@@ -14,12 +14,12 @@ export const getAxios = async (force: boolean = false): Promise<AxiosInstance> =
 
         if (info?.server) {
             server = info.server;
-
             if (/^\d+$/.test(server)) server = `127.0.0.1:${server}`
         }
         if (info?.secret) secret = info!.secret;
 
-    } catch { }
+    } catch (err) {
+    }
 
     axiosIns = axios.create({
         baseURL: `http://${server}`,

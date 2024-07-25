@@ -10,7 +10,7 @@ mod utils;
 
 fn main() {
     tauri::Builder::default()
-        .setup(|app| {
+        .setup(|app: &mut tauri::App| {
             resolve::resolve_setup(app);
             Ok(())
         })
