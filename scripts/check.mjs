@@ -211,7 +211,6 @@ async function resolveResource(binInfo) {
     const resDir = path.join(cwd, "src-tauri/resources");
     const targetPath = path.join(resDir, file)
 
-
     if (!FORCE && (await fs.pathExists(targetPath))) return;
 
     await fs.mkdirp(resDir)

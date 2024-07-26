@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getLocale, getMessages } from "next-intl/server";
-import { Roboto_Mono as FontSans } from "next/font/google";
+import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 
@@ -33,7 +33,7 @@ export default async function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background text-foreground font-sans antialiased",
-          fontSans.className
+          fontSans.variable
         )}
       >
         <NextIntlClientProvider messages={messages}>

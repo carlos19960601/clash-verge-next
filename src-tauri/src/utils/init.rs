@@ -2,13 +2,47 @@ use std::fs;
 
 use anyhow::Result;
 
-use crate::config::Config;
+use crate::config::{Config, IClashTemp, IProfiles, IVerge};
 
-use crate::utils::dirs;
+use crate::utils::{dirs, help};
 
 pub fn init_config() -> Result<()> {
-    let a= dirs::app_home_dir().or(None);
-    println!("app_home_dir: {}", app_home_dir);
+    // "/Users/carlos/Library/Application Support/io.github.clash-verge-next.clash-verge-next"
+    crate::log_err!(dirs::app_home_dir().map(|app_dir| {
+        if !app_dir.exists() {
+            let _ = fs::create_dir_all(app_dir);
+        }
+    }));
+
+    // "/Users/carlos/Library/Application Support/io.github.clash-verge-next.clash-verge-next/profiles"
+    crate::log_err!(dirs::app_profiles_dir().map(|profiles_dir| {
+        if !profiles_dir.exists() {
+            let _ = fs::create_dir_all(profiles_dir);
+        }
+    }));
+
+    // "/Users/carlos/Library/Application Support/io.github.clash-verge-next.clash-verge-next/config.yaml"
+    crate::log_err!(dirs::clash_path().map(|path| {
+        if !path.exists() {
+            help::save_yaml(&path, &IClashTemp::template().0, Some("# Clash Vergeasu"))?;
+        }
+
+        <Result<()>>::Ok(())
+    }));
+
+    crate::log_err!(dirs::verge_path().map(|path| {
+        if !path.exists() {
+            help::save_yaml(&path, &IVerge::template(), Some("# Clash Verge"))?;
+        }
+        <Result<()>>::Ok(())
+    }));
+
+    crate::log_err!(dirs::profiles_path().map(|path| {
+        if !path.exists() {
+            help::save_yaml(&path, &IProfiles::template(), Some("# Clash Verge"))?;
+        }
+        <Result<()>>::Ok(())
+    }));
 
     Ok(())
 }
@@ -28,6 +62,7 @@ pub fn init_resources() -> Result<()> {
 
     let file_list = ["Country.mmdb", "geoip.dat", "geosite.dat"];
 
+    // 拷贝文件到 app_dir
     for file in file_list.iter() {
         let src_path = res_dir.join(file);
         let dest_path = app_dir.join(file);
@@ -66,11 +101,15 @@ pub fn init_resources() -> Result<()> {
 }
 
 pub fn startup_script() -> Result<()> {
-    let path: Option<String> = {
+    let path = {
         let verge = Config::verge();
         let verge = verge.latest();
-        verge.startup_script.clone()
+        verge.startup_script.clone().unwrap_or("".to_string())
     };
+
+    if !path.is_empty() {
+        
+    }
 
     Ok(())
 }

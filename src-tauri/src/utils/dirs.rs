@@ -31,6 +31,10 @@ pub fn app_home_dir() -> Result<PathBuf> {
         .join(APP_ID))
 }
 
+pub fn app_profiles_dir() -> Result<PathBuf> {
+    Ok(app_home_dir()?.join("profiles"))
+}
+
 pub fn app_resources_dir() -> Result<PathBuf> {
     let handle = handle::Handle::global();
     let app_handle = handle.app_handle.lock();
@@ -43,4 +47,13 @@ pub fn app_resources_dir() -> Result<PathBuf> {
     }
 
     Err(anyhow::anyhow!("获取app resource路径失败"))
+}
+
+pub fn path_to_str(path: &PathBuf) -> Result<&str> {
+    let path_str = path
+        .as_os_str()
+        .to_str()
+        .ok_or(anyhow::anyhow!("failed to get path from {:?}", path))?;
+
+    Ok(path_str)
 }

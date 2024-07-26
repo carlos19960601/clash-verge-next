@@ -1,7 +1,7 @@
 use std::{fs, path::PathBuf};
 
-use anyhow::{anyhow, bail, Context, Ok, Result};
-use serde::de::DeserializeOwned;
+use anyhow::{anyhow, bail, Context, Result};
+use serde::{de::DeserializeOwned, Serialize};
 use serde_yaml::{Mapping, Value};
 
 pub fn read_yaml<T: DeserializeOwned>(path: &PathBuf) -> Result<T> {
@@ -25,6 +25,18 @@ pub fn read_merge_mapping(path: &PathBuf) -> Result<Mapping> {
         .as_mapping()
         .ok_or(anyhow!("转换成yaml Mapping格式失败 \"{}\"", path.display()))?
         .to_owned())
+}
+
+pub fn save_yaml<T: Serialize>(path: &PathBuf, data: &T, prefix: Option<&str>) -> Result<()> {
+    let data_str = serde_yaml::to_string(data)?;
+
+    let yaml_str = match prefix {
+        Some(prefix) => format!("{prefix}\n\n{data_str}"),
+        None => data_str,
+    };
+
+    let path_str = path.as_os_str().to_string_lossy().to_string();
+    fs::write(path, yaml_str.as_bytes()).with_context(|| format!("保存文件 \"{path_str}\""))
 }
 
 #[macro_export]
