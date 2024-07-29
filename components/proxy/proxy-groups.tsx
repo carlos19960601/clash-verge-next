@@ -1,9 +1,13 @@
+import { Virtuoso } from "react-virtuoso";
+import { ProxyRender } from "./proxy-render";
+
 interface Props {
   mode: string;
 }
 
 const ProxyGroups = (props: Props) => {
-  return <div></div>;
+  const { mode } = props;
+  return <Virtuoso itemContent={(index) => <ProxyRender />} />;
 };
 
 export default ProxyGroups;

@@ -23,22 +23,22 @@ const menus = [
     icon: <Shell size={18} />,
   },
   {
-    href: "/subscription",
+    href: "/profile",
     label: "订阅",
     icon: <Podcast size={18} />,
   },
   {
-    href: "/connection",
+    href: "/connections",
     label: "连接",
     icon: <Cable size={18} />,
   },
   {
-    href: "/rule",
+    href: "/rules",
     label: "规则",
     icon: <Scale size={18} />,
   },
   {
-    href: "/log",
+    href: "/logs",
     label: "日志",
     icon: <ScrollText size={18} />,
   },
@@ -48,7 +48,7 @@ const menus = [
     icon: <Zap size={18} />,
   },
   {
-    href: "/setting",
+    href: "/settings",
     label: "设置",
     icon: <Settings size={18} />,
   },

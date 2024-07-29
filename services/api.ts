@@ -11,6 +11,7 @@ export const getAxios = async (force: boolean = false): Promise<AxiosInstance> =
 
     try {
         const info = await getClashInfo();
+        console.log("====", info)
 
         if (info?.server) {
             server = info.server;
@@ -40,4 +41,24 @@ export const getClashConfig = async (): Promise<IConfigData> => {
 export const updateConfigs = async (config: Partial<IConfigData>) => {
     const instance = await getAxios()
     return instance?.patch("/configs", config)
+}
+
+export const getProxies = async () => {
+    const [proxyRecord, providerRecord] = await Promise.all([
+        getProxiesInner(),
+        getProxyProviders(),
+    ])
+}
+
+export const getProxiesInner = async () => {
+    const instance = await getAxios();
+    const response = await instance.get<any, any>("/proxies");
+    return (response?.proxies || {}) as Record<string, IProxyItem>
+}
+
+export const getProxyProviders = async () => {
+    const instance = await getAxios();
+    const response = await instance.get<any, any>("/providers/proxies");
+
+    const providers = (response.providers || {}) as Record<string, IProxyProviderItem>;
 }

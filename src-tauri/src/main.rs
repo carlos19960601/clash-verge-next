@@ -27,14 +27,31 @@ fn main() -> std::io::Result<()> {
         })
         .invoke_handler(tauri::generate_handler![
             // clash
-            cmds::get_clash_info
+            cmds::get_clash_info,
+            cmds::get_profiles,
         ]);
 
     let app = builder
         .build(tauri::generate_context!())
         .expect("error while running tauri application");
 
-    app.run(|app_handle, e| {});
+    app.run(|app_handle, e| match e {
+        tauri::RunEvent::ExitRequested { api, .. } => {
+            api.prevent_exit();
+        }
+        tauri::RunEvent::Updater(tauri::UpdaterEvent::Downloaded) => {}
+        tauri::RunEvent::WindowEvent { label, event, .. } => {
+            if label == "main" {
+                match event {
+                    tauri::WindowEvent::Destroyed => {}
+                    tauri::WindowEvent::CloseRequested { api, .. } => {}
+                    tauri::WindowEvent::Moved(_) | tauri::WindowEvent::Resized(_) => {}
+                    _ => {}
+                }
+            }
+        }
+        _ => {}
+    });
 
     Ok(())
 }

@@ -84,13 +84,14 @@ impl Config {
         let (config, exists_keys, logs) = enhance::enhance();
         *Config::runtime().draft() = IRuntime {
             config: Some(config),
+            exists_keys,
         };
 
         Ok(())
     }
 
     pub fn generate_file(typ: ConfigType) -> Result<PathBuf> {
-        let path = match typ {
+        let path: PathBuf = match typ {
             ConfigType::Run => dirs::app_home_dir()?.join(RUNTIME_CONFIG),
             ConfigType::Check => temp_dir().join(CHECK_CONFIG),
         };

@@ -9,23 +9,41 @@ pub struct IVerge {
     pub language: Option<String>,
     pub theme_mode: Option<String>,
     pub traffic_graph: Option<bool>,
+    /// show memory info (only for Clash Meta)
+    pub enable_memory_usage: Option<bool>,
+
+    /// can the app auto startup
+    pub enable_auto_launch: Option<bool>,
+
     pub clash_core: Option<String>,
     pub startup_script: Option<String>,
     /// 是否启用随机端口
     pub enable_random_port: Option<bool>,
-    pub verge_mixed_port: Option<u16>,
 
     pub enable_tun_mode: Option<bool>,
     /// 是否使用内部的脚本支持，默认为真
     pub enable_builtin_enhanced: Option<bool>,
-    pub verge_socks_enabled: Option<bool>,
-    pub verge_http_enabled: Option<bool>,
+
+    /// set system proxy
+    pub enable_system_proxy: Option<bool>,
+    /// use pac mode
+    pub proxy_auto_config: Option<bool>,
 
     /// verge 的各种 port 用于覆盖 clash 的各种 port
     #[cfg(not(target_os = "windows"))]
     pub verge_redir_port: Option<u16>,
     #[cfg(not(target_os = "windows"))]
     pub verge_redir_enabled: Option<bool>,
+
+    pub verge_mixed_port: Option<u16>,
+
+    pub verge_socks_port: Option<u16>,
+
+    pub verge_socks_enabled: Option<bool>,
+
+    pub verge_port: Option<u16>,
+
+    pub verge_http_enabled: Option<bool>,
 }
 
 impl IVerge {
@@ -46,6 +64,11 @@ impl IVerge {
             theme_mode: Some("system".into()),
             traffic_graph: Some(true),
             startup_script: None,
+            verge_mixed_port: Some(7897),
+            verge_socks_port: Some(7898),
+            verge_port: Some(7899),
+            verge_socks_enabled: Some(true),
+            verge_http_enabled: Some(true),
             ..Self::default()
         }
     }

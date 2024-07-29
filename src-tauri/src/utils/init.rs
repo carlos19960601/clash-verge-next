@@ -107,9 +107,7 @@ pub fn startup_script() -> Result<()> {
         verge.startup_script.clone().unwrap_or("".to_string())
     };
 
-    if !path.is_empty() {
-        
-    }
+    if !path.is_empty() {}
 
     Ok(())
 }

@@ -8,8 +8,6 @@ use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use serde_yaml::{Mapping, Value};
 
-use super::IVerge;
-
 #[derive(Debug, Clone)]
 pub struct IClashTemp(pub Mapping);
 
@@ -129,7 +127,7 @@ impl IClashTemp {
     }
 
     pub fn guard_client_ctrl(config: &Mapping) -> String {
-        let value = Self::guard_server_ctrl(config);
+        let value: String = Self::guard_server_ctrl(config);
         match SocketAddr::from_str(value.as_str()) {
             Ok(mut socket) => {
                 if socket.ip().is_unspecified() {
