@@ -1,4 +1,6 @@
-use anyhow::{bail, Result};
+use std::{fs, io::Write};
+
+use anyhow::{bail, Context, Result};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Mapping;
 
@@ -60,5 +62,43 @@ impl IProfiles {
         }
 
         bail!("获取pofile item \"uid:{uid}\"失败");
+    }
+
+    pub fn append_item(&mut self, mut item: PrfItem) -> Result<()> {
+        if item.uid.is_none() {
+            bail!("uid不能为null")
+        }
+
+        if let Some(file_data) = item.file_data.take() {
+            if item.file.is_none() {
+                bail!("文件不能为null")
+            }
+
+            let file = item.file.clone().unwrap();
+            let path = dirs::app_profiles_dir()?.join(&file);
+
+            fs::File::create(path)
+                .with_context(|| format!("创建文件失败 \"{}\"", file))?
+                .write(file_data.as_bytes())
+                .with_context(|| format!("写文件失败 \"{}\"", file))?;
+        }
+
+        if self.items.is_none() {
+            self.items = Some(vec![]);
+        }
+
+        if let Some(items) = self.items.as_mut() {
+            items.push(item)
+        }
+
+        self.save_file()
+    }
+
+    pub fn save_file(&self) -> Result<()> {
+        help::save_yaml(
+            &dirs::profiles_path()?,
+            self,
+            Some("# Profiles Config for Clash Verge"),
+        )
     }
 }

@@ -29,6 +29,7 @@ fn main() -> std::io::Result<()> {
             // clash
             cmds::get_clash_info,
             cmds::get_profiles,
+            cmds::import_profile,
         ]);
 
     let app = builder

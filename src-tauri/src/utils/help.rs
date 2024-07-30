@@ -1,6 +1,7 @@
 use std::{fs, path::PathBuf};
 
 use anyhow::{anyhow, bail, Context, Result};
+use nanoid::nanoid;
 use serde::{de::DeserializeOwned, Serialize};
 use serde_yaml::{Mapping, Value};
 
@@ -39,6 +40,18 @@ pub fn save_yaml<T: Serialize>(path: &PathBuf, data: &T, prefix: Option<&str>) -
     fs::write(path, yaml_str.as_bytes()).with_context(|| format!("保存文件 \"{path_str}\""))
 }
 
+const ALPHABET: [char; 62] = [
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
+    'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B',
+    'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
+    'V', 'W', 'X', 'Y', 'Z',
+];
+
+pub fn get_uid(prefix: &str) -> String {
+    let id = nanoid!(11, &ALPHABET);
+    format!("{prefix}{id}")
+}
+
 #[macro_export]
 macro_rules! log_err {
     ($result: expr) => {
@@ -50,6 +63,19 @@ macro_rules! log_err {
     ($result: expr, $err_str: expr) => {
         if let Err(_) = $result {
             log::error!(target: "app", "{}", $err_str);
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! wrap_err {
+    ($stat: expr) => {
+        match $stat {
+            Ok(a) => Ok(a),
+            Err(err) => {
+                log::error!(target: "app", "{}", err.to_string());
+                Err(format!("{}", err.to_string()))
+            }
         }
     };
 }

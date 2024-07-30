@@ -1,8 +1,9 @@
 import BasePage from "@/components/layout/base/base-page";
+import { ProfileItem } from "@/components/profile/profile-item";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useProfiles } from "@/hooks/use-profiles";
-import { importProfiles } from "@/services/cmds";
+import { importProfile } from "@/services/cmds";
 import { DndContext } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 
@@ -25,7 +26,18 @@ export default function Page() {
 
     const type1 = ["local", "remote"];
     const type2 = ["merge", "script"];
-  }, []);
+
+    const regularItems = items.filter((i) => i && type1.includes(i.type!));
+    const restItems = items.filter((i) => i && type2.includes(i.type!));
+    const restMap = Object.fromEntries(restItems.map((i) => [i.uid, i]));
+
+    const enhanceItems = chain
+      .map((i) => restMap[i]!)
+      .filter(Boolean)
+      .concat(restItems.filter((i) => !chain.includes(i.uid)));
+
+    return { regularItems, enhanceItems };
+  }, [profiles]);
 
   const onImport = async () => {
     if (!url) return;
@@ -33,7 +45,7 @@ export default function Page() {
     setLoading(true);
 
     try {
-      await importProfiles(url);
+      await importProfile(url);
     } catch (error) {
       setLoading(false);
     } finally {
@@ -75,7 +87,16 @@ export default function Page() {
             items={regularItems.map((x) => {
               return x.uid;
             })}
-          ></SortableContext>
+          >
+            {regularItems.map((item) => (
+              <ProfileItem
+                key={item.file}
+                id={item.uid}
+                selected={profiles.current === item.uid}
+                itemData={item}
+              />
+            ))}
+          </SortableContext>
         </DndContext>
       </div>
     </BasePage>
